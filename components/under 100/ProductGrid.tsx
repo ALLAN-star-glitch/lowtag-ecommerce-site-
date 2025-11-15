@@ -70,7 +70,7 @@ export default function ProductGrid() {
     <section className="py-10" style={{ backgroundColor: LT_BG }}>
       <div className="max-w-7xl mx-auto px-4 grid grid-cols-12 gap-6">
         {/* DESKTOP FILTER SIDEBAR */}
-        <aside className="hidden md:block col-span-3 lg:col-span-2 sticky top-24 h-max pr-4 bg-transparent">
+        <aside className="hidden md:block col-span-3 lg:col-span-2 sticky top-44 h-max pr-4 bg-transparent">
           {renderFilters()}
           <button
             onClick={clearFilters}
