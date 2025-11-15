@@ -1,13 +1,10 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import {
-  Search,
-  Heart,
-  ShoppingCart,
-  User,
-  TrendingUp,
-} from "lucide-react";
+import { Search, Heart, ShoppingCart, User, TrendingUp } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 const marketingMessages = [
   { text: "Free delivery on orders above KES 1,500", icon: "🎁" },
@@ -16,21 +13,22 @@ const marketingMessages = [
 ];
 
 const menuItems = [
-  { label: "Electronics", href: "#electronics" },
-  { label: "Fashion", href: "#fashion" },
-  { label: "Household", href: "#household" },
-  { label: "Kitchen", href: "#kitchen" },
-  { label: "Personal Care", href: "#personal-care" },
-  { label: "Affordable Essentials", href: "#essentials" },
-  { label: "Deals / Flash Sale", href: "#deals", highlight: true },
-  { label: "Imports / Exclusive Items", href: "#imports", highlight: true },
-  { label: "Below KES 100", href: "#below-100", badge: true },
+  { label: "Below KES 100", href: "/below-100", badge: true },
+  { label: "Deals / Flash Sale", href: "/deals", highlight: true },
+  { label: "Imports / Exclusive Items", href: "/imports", highlight: true },
+  { label: "Electronics", href: "/electronics" },
+  { label: "Fashion", href: "/fashion" },
+  { label: "Household", href: "/household" },
+  { label: "Kitchen", href: "/kitchen" },
+  { label: "Personal Care", href: "/personal-care" },
+  { label: "Affordable Essentials", href: "/essentials" },
 ];
 
 export default function Header() {
+  const pathname = usePathname();
   const [currentMessage, setCurrentMessage] = useState(0);
-  const [activeMenu, setActiveMenu] = useState("");
 
+  // Rotate marketing messages
   useEffect(() => {
     const interval = setInterval(
       () => setCurrentMessage((prev) => (prev + 1) % marketingMessages.length),
@@ -58,13 +56,12 @@ export default function Header() {
 
       {/* Tier 2 - Main Navbar */}
       <div className="bg-cream-peach shadow-md">
-        <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
+        <div className="max-w-7xl mx-auto px-2 py-1 flex items-center justify-between gap-2">
           {/* Logo */}
-          <div className="flex items-center gap-2">
-            <div className="w-10 h-10 bg-royal-blue rounded-lg flex items-center justify-center text-white font-bold text-xl">
-              L
-            </div>
-            <span className="text-2xl font-bold text-soft-black">Lowtag</span>
+          <div className="flex items-center">
+            <Link href="/">
+              <Image src="/logo.png" alt="Lowtag Logo" width={100} height={100} />
+            </Link>
           </div>
 
           {/* Search - Desktop */}
@@ -77,30 +74,31 @@ export default function Header() {
               <input
                 type="text"
                 placeholder="Search for products, brands, and more..."
-                className="w-full pl-10 pr-4 py-2.5 rounded-full border-2 border-gray-200 focus:border-royal-blue focus:outline-none"
+                className="w-full pl-10 pr-4 py-2 rounded-full border-2 border-gray-200 focus:border-royal-blue focus:outline-none"
               />
             </div>
           </div>
 
           {/* Actions */}
-          <div className="flex items-center gap-4">
-            {/* Mobile Search Icon */}
+          <div className="flex items-center gap-3">
             <button className="md:hidden text-soft-black hover:text-royal-blue transition-colors">
               <Search size={24} />
             </button>
 
-            <button className="flex flex-col items-center gap-1 text-soft-black hover:text-royal-blue transition-colors">
+            <button className="flex flex-col items-center gap-0.5 text-soft-black hover:text-royal-blue transition-colors">
               <Heart size={24} />
               <span className="text-xs">Wishlist</span>
             </button>
-            <button className="flex flex-col items-center gap-1 text-soft-black hover:text-royal-blue transition-colors relative">
+
+            <button className="flex flex-col items-center gap-0.5 text-soft-black hover:text-royal-blue transition-colors relative">
               <ShoppingCart size={24} />
               <span className="text-xs">Cart</span>
               <span className="absolute -top-1 -right-1 bg-hot-pink text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
                 3
               </span>
             </button>
-            <button className="flex flex-col items-center gap-1 text-soft-black hover:text-royal-blue transition-colors">
+
+            <button className="flex flex-col items-center gap-0.5 text-soft-black hover:text-royal-blue transition-colors">
               <User size={24} />
               <span className="text-xs">Account</span>
             </button>
@@ -110,28 +108,33 @@ export default function Header() {
 
       {/* Tier 3 - Menu Navbar */}
       <div className="bg-white shadow-sm">
-        <div className="max-w-7xl mx-auto px-4">
-          <nav className="flex items-center gap-6 overflow-x-auto py-3">
-            {menuItems.map((item) => (
-              <a
-                key={item.label}
-                href={item.href}
-                className={`flex items-center gap-2 whitespace-nowrap text-sm font-medium transition-colors hover:text-royal-blue ${
-                  activeMenu === item.label
-                    ? "text-royal-blue border-b-2 border-royal-blue"
-                    : "text-soft-black"
-                } ${item.highlight ? "text-tangerine" : ""}`}
-                onClick={() => setActiveMenu(item.label)}
-              >
-                {item.label}
-                {item.badge && (
-                  <span className="bg-hot-pink text-white text-xs px-2 py-0.5 rounded-full flex items-center gap-1">
-                    <TrendingUp size={12} />
-                    Hot
-                  </span>
-                )}
-              </a>
-            ))}
+        <div className="max-w-7xl mx-auto px-2">
+          <nav className="flex items-center gap-4 overflow-x-auto py-2.5">
+            {menuItems.map((item) => {
+              const isActive =
+                item.href === pathname ||
+                (item.href !== "/" && pathname.startsWith(item.href));
+
+              return (
+                <Link
+                  key={item.label}
+                  href={item.href}
+                  className={`flex items-center gap-2 whitespace-nowrap text-sm font-medium transition-colors hover:text-royal-blue ${
+                    isActive
+                      ? "text-royal-blue border-b-2 border-royal-blue"
+                      : "text-soft-black"
+                  } ${item.highlight ? "text-tangerine" : ""}`}
+                >
+                  {item.label}
+                  {item.badge && (
+                    <span className="bg-hot-pink text-white text-xs px-2 py-0.5 rounded-full flex items-center gap-1">
+                      <TrendingUp size={12} />
+                      Hot
+                    </span>
+                  )}
+                </Link>
+              );
+            })}
           </nav>
         </div>
       </div>
