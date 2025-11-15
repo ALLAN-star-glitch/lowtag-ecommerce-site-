@@ -14,7 +14,7 @@ const marketingMessages = [
 
 const menuItems = [
   { label: "Below KES 100", href: "/below-100", badge: true },
-  { label: "Deals / Flash Sale", href: "/deals", highlight: true },
+  { label: "Deals / Flash Sale", href: "/flash-deals", highlight: true },
   { label: "Imports / Exclusive Items", href: "/imports", highlight: true },
   { label: "Electronics", href: "/electronics" },
   { label: "Fashion", href: "/fashion" },
@@ -38,7 +38,7 @@ export default function Header() {
   }, []);
 
   return (
-    <header className="sticky top-0 z-50 w-full">
+    <header className="sticky top-0 z-30 w-full">
       {/* Tier 1 - Marketing Bar */}
       <div className="bg-linear-to-r from-tangerine to-hot-pink py-2 overflow-hidden">
         <div className="animate-slide flex gap-8">
