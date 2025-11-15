@@ -10,7 +10,7 @@ interface ProductPageProps {
   type: "owned" | "partner";
 }
 
-export function ProductPage({ type = "owned" }: ProductPageProps) {
+export default function ProductPage({ type = "owned" }: ProductPageProps) {
   const [selectedImage, setSelectedImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
   const isOwned = type === "owned";
