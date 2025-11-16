@@ -18,7 +18,7 @@ export const metadata: Metadata = {
     siteName: 'LowTag',
     images: [
       {
-        url: 'https://images.unsplash.com/photo-1556740738-b6a63e27c4df?w=900&auto=format&fit=crop&q=60',
+        url: 'https://images.unsplash.com/photo-1527264935190-1401c51b5bbc?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8ZGlzY291bnR8ZW58MHx8MHx8fDA%3D',
         width: 1200,
         height: 630,
         alt: 'LowTag Flash Deals',
