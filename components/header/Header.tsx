@@ -5,28 +5,20 @@ import { Search, Heart, ShoppingCart, User, TrendingUp } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { menuItems } from "@/lib/constants/menuItems";
+import { MenuItem } from "@/lib/interfaces/MenuItem";
 
+
+// Marketing messages
 const marketingMessages = [
   { text: "Free delivery on orders above KES 1,500", icon: "🎁" },
   { text: "Flash deals today — don't miss out!", icon: "⚡" },
   { text: "Verified imports, trusted sellers", icon: "👑" },
 ];
 
-const menuItems = [
-  { label: "Below KES 100", href: "/below-100", badge: true },
-  { label: "Deals / Flash Sale", href: "/flash-deals", highlight: true },
-  { label: "Imports / Exclusive Items", href: "/imports", highlight: true },
-  { label: "Electronics", href: "/electronics" },
-  { label: "Fashion", href: "/fashion" },
-  { label: "Household", href: "/household" },
-  { label: "Kitchen", href: "/kitchen" },
-  { label: "Personal Care", href: "/personal-care" },
-  { label: "Affordable Essentials", href: "/essentials" },
-];
-
 export default function Header() {
   const pathname = usePathname();
-  const [currentMessage, setCurrentMessage] = useState(0);
+  const [currentMessage, setCurrentMessage] = useState<number>(0);
 
   // Rotate marketing messages
   useEffect(() => {
@@ -36,6 +28,13 @@ export default function Header() {
     );
     return () => clearInterval(interval);
   }, []);
+
+  // Check if menu item is active
+  const isActive = (item: MenuItem) => {
+    // Only highlight "/" on exact home page
+    if (item.href === "/") return pathname === "/";
+    return pathname.startsWith(item.href);
+  };
 
   return (
     <header className="sticky top-0 z-30 w-full">
@@ -67,10 +66,7 @@ export default function Header() {
           {/* Search - Desktop */}
           <div className="flex-1 max-w-2xl hidden md:block">
             <div className="relative">
-              <Search
-                className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
-                size={20}
-              />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
               <input
                 type="text"
                 placeholder="Search for products, brands, and more..."
@@ -110,17 +106,15 @@ export default function Header() {
       <div className="bg-white shadow-sm">
         <div className="max-w-7xl mx-auto px-2">
           <nav className="flex items-center gap-4 overflow-x-auto py-2.5">
-            {menuItems.map((item) => {
-              const isActive =
-                item.href === pathname ||
-                (item.href !== "/" && pathname.startsWith(item.href));
+            {menuItems.map((item: MenuItem) => {
+              const active = isActive(item);
 
               return (
                 <Link
                   key={item.label}
                   href={item.href}
                   className={`flex items-center gap-2 whitespace-nowrap text-sm font-medium transition-colors hover:text-royal-blue ${
-                    isActive
+                    active
                       ? "text-royal-blue border-b-2 border-royal-blue"
                       : "text-soft-black"
                   } ${item.highlight ? "text-tangerine" : ""}`}

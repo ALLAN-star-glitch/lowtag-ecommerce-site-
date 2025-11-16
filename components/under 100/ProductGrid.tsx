@@ -66,12 +66,16 @@ export default function ProductGrid() {
     setSearch("");
   };
 
+  const applyFilters = () => {
+    setShowMobileFilter(false);
+  };
+
   return (
     <section className="py-10" style={{ backgroundColor: LT_BG }}>
       <div className="max-w-7xl mx-auto px-4 grid grid-cols-12 gap-6">
         {/* DESKTOP FILTER SIDEBAR */}
         <aside className="hidden md:block col-span-3 lg:col-span-2 sticky top-44 h-max pr-4 bg-transparent">
-          {renderFilters()}
+          {renderFilters(false)}
           <button
             onClick={clearFilters}
             className="w-full mt-6 py-2 text-center rounded-md"
@@ -113,13 +117,6 @@ export default function ProductGrid() {
 
       {/* FLOATING MOBILE BUTTONS */}
       <div className="md:hidden fixed bottom-6 right-6 flex flex-col gap-3 z-50">
-        {/* Search Button */}
-        <button
-          onClick={() => setShowMobileSearch(true)}
-          className="w-14 h-14 rounded-full bg-white shadow-lg flex items-center justify-center"
-        >
-          <SearchIcon size={20} style={{ color: LT_PRIMARY }} />
-        </button>
 
         {/* Filter Button */}
         <button
@@ -170,10 +167,20 @@ export default function ProductGrid() {
                 <X size={22} style={{ color: LT_TEXT }} />
               </button>
             </div>
-            {renderFilters()}
+
+            {renderFilters(true)}
+
+            <button
+              onClick={applyFilters}
+              className="w-full mt-6 py-2 text-center rounded-md"
+              style={{ backgroundColor: LT_PRIMARY, color: "#fff" }}
+            >
+              Apply
+            </button>
+
             <button
               onClick={clearFilters}
-              className="w-full mt-6 py-2 text-center rounded-md"
+              className="w-full mt-3 py-2 text-center rounded-md"
               style={{ backgroundColor: LT_SECONDARY, color: "#fff" }}
             >
               Clear All Filters
@@ -184,24 +191,29 @@ export default function ProductGrid() {
     </section>
   );
 
-  function renderFilters() {
+  function renderFilters(isMobile = false) {
     return (
       <div className="space-y-6 p-2">
-        {/* SEARCH */}
-        <div className="p-2 rounded-xl" style={{ backgroundColor: "#fff", border: `1px solid ${LT_MUTED_BORDER}` }}>
-          <div className="flex items-center gap-2">
-            <div style={{ backgroundColor: LT_BG, padding: 6, borderRadius: 6 }}>
-              <SearchIcon size={16} style={{ color: LT_TEXT }} />
+        {/* Only desktop shows search */}
+        {!isMobile && (
+          <div
+            className="p-2 rounded-xl"
+            style={{ backgroundColor: "#fff", border: `1px solid ${LT_MUTED_BORDER}` }}
+          >
+            <div className="flex items-center gap-2">
+              <div style={{ backgroundColor: LT_BG, padding: 6, borderRadius: 6 }}>
+                <SearchIcon size={16} style={{ color: LT_TEXT }} />
+              </div>
+              <input
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder="Search products..."
+                className="w-full bg-transparent outline-none text-sm py-1"
+                style={{ color: LT_TEXT }}
+              />
             </div>
-            <input
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search products..."
-              className="w-full bg-transparent outline-none text-sm py-1"
-              style={{ color: LT_TEXT }}
-            />
           </div>
-        </div>
+        )}
 
         {/* BADGES */}
         <FilterSection title="Badges" isOpen={showBadges} toggle={() => setShowBadges(!showBadges)} textColor={LT_TEXT}>
