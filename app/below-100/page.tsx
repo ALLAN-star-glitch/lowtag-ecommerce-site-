@@ -22,7 +22,7 @@ export const metadata: Metadata = {
     siteName: 'LowTag',
     images: [
       {
-        url: 'https://images.unsplash.com/photo-1527264935190-1401c51b5bbc?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8ZGlzY291bnR8ZW58MHx8MHx8fDA%3D',
+        url: 'https://images.unsplash.com/photo-1643906226799-59eab234e41d?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mzh8fGVjb21tZXJjZXxlbnwwfHwwfHx8MA%3D%3D',
         width: 1200,
         height: 630,
         alt: 'LowTag Below KES 100 Deals',
