@@ -1,5 +1,5 @@
 // app/below-100/page.tsx
-import HeroSection from '@/components/under 100/HeroSection';
+import Below100HeroSection from '@/components/under 100/HeroSection';
 import ProductGrid from '@/components/under 100/ProductGrid';
 import type { Metadata } from 'next';
 import React from 'react';
@@ -38,7 +38,7 @@ export default function BelowKES100Page() {
     <main className="min-h-screen bg-white w-full">
       {/* Hero Section */}
       <section aria-label="Below KES 100 Hero Section">
-        <HeroSection />
+        <Below100HeroSection />
       </section>
 
       {/* Product Grid */}

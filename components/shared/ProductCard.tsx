@@ -1,42 +1,51 @@
+"use client";
+
 import React from "react";
-import { ShoppingCartIcon, HeartIcon } from "lucide-react";
-
-
-import { Button } from "./Button";
 import Image from "next/image";
-import { CountdownTimer } from "./CountimeTimer";
+import { ShoppingCartIcon, HeartIcon } from "lucide-react";
 import { Badge } from "../shared/Badge";
 import { BadgeType } from "@/lib/types/badge/badgeType";
+import { Button } from "./Button";
+import { CountdownTimer } from "./CountdownTimer";
 
-interface ProductCardProps {
-  images: string[]; // multiple images from Strapi
+export interface ProductCardProps {
+  id: string | number;
+  image: string; // single image
   name: string;
-  price: number;
-  discountPrice?: number; // optional, falls back to price
+  price: number; // current/final price
+  originalPrice?: number; // original price before discount
   badges?: BadgeType[];
   category?: string;
-  flashDeals?: string[]; // names of flash deals
+  flashDeals?: string[];
   hasTimer?: boolean;
   timerEndTime?: Date;
   stock?: number;
+  rating?: number; // average rating 0-5
+  reviewsCount?: number; // total number of reviews
+  onAddToCart?: () => void;
+  onToggleWishlist?: () => void;
 }
 
-export function ProductCard({
-  images,
+export default function ProductCard({
+  id,
+  image,
   name,
   price,
-  discountPrice,
+  originalPrice,
   badges = [],
   category,
   flashDeals = [],
   hasTimer,
   timerEndTime,
   stock,
+  rating = 0,
+  reviewsCount = 0,
+  onAddToCart,
+  onToggleWishlist,
 }: ProductCardProps) {
-  const finalDiscountPrice = discountPrice ?? price;
   const discountPercent =
-    price && finalDiscountPrice < price
-      ? Math.round(((price - finalDiscountPrice) / price) * 100)
+    originalPrice && originalPrice > price
+      ? Math.round(((originalPrice - price) / originalPrice) * 100)
       : 0;
 
   return (
@@ -44,7 +53,7 @@ export function ProductCard({
       {/* Image */}
       <div className="relative overflow-hidden aspect-square">
         <Image
-          src={images[0]} // show first image
+          src={image}
           alt={name}
           width={500}
           height={500}
@@ -59,7 +68,10 @@ export function ProductCard({
         )}
 
         {/* Wishlist Heart */}
-        <button className="absolute top-3 right-3 p-1.5 bg-white rounded-full shadow hover:bg-hot-pink hover:text-white transition-colors">
+        <button
+          onClick={onToggleWishlist}
+          className="absolute top-3 right-3 p-1.5 bg-white rounded-full shadow hover:bg-hot-pink hover:text-white transition-colors"
+        >
           <HeartIcon className="w-4 h-4" />
         </button>
 
@@ -102,18 +114,37 @@ export function ProductCard({
         )}
 
         {/* Product Name */}
-        <h3 className="text-gray-900 font-semibold text-sm mb-2 line-clamp-2">
+        <h3 className="text-gray-900 font-semibold text-sm mb-1 line-clamp-2">
           {name}
         </h3>
+
+        {/* Rating */}
+        {reviewsCount > 0 && (
+          <div className="flex items-center gap-1 mb-2">
+            <div className="flex items-center">
+              {[...Array(5)].map((_, i) => (
+                <span
+                  key={i}
+                  className={`text-xs ${
+                    i < Math.floor(rating) ? "text-soft-gold" : "text-gray-300"
+                  }`}
+                >
+                  ★
+                </span>
+              ))}
+            </div>
+            <span className="text-xs text-gray-600">({reviewsCount})</span>
+          </div>
+        )}
 
         {/* Price */}
         <div className="flex items-center gap-2 mb-3">
           <span className="text-lg font-bold text-royal-blue">
-            ${finalDiscountPrice.toFixed(2)}
+            ${price.toFixed(2)}
           </span>
-          {discountPercent > 0 && (
+          {discountPercent > 0 && originalPrice && (
             <span className="text-sm text-gray-400 line-through">
-              ${price.toFixed(2)}
+              ${originalPrice.toFixed(2)}
             </span>
           )}
         </div>
@@ -133,6 +164,7 @@ export function ProductCard({
         <Button
           variant="primary"
           className="w-full py-2 mt-auto flex items-center justify-center gap-2 text-sm"
+          onClick={onAddToCart}
           disabled={stock === 0}
         >
           <ShoppingCartIcon className="w-4 h-4" />

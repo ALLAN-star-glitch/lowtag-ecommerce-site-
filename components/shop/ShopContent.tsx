@@ -1,188 +1,174 @@
+'use client'
 
+import React from 'react'
 import Hero from '@/components/home/hero/Hero'
 import Badge from '@/components/products/Badge'
 import CategoryCard from '@/components/products/CategoryCard'
 import ProductCard from '@/components/products/ProductCard'
 import { TrustSection } from '@/components/products/TrustSection'
-import React from 'react'
+
+// ----- Types -----
+type Category = {
+  icon: string
+  title: string
+  itemCount: number
+  color: string
+  href: string
+}
+
+type BadgeType = 'owned' | 'partner' | 'exclusive' | 'fast' | 'quality' | 'trending'
+
+type Product = {
+  image: string
+  title: string
+  price: number
+  originalPrice?: number
+  badges: BadgeType[]
+  rating: number
+  reviews: number
+}
+
+// ----- Data -----
+const categories: Category[] = [
+  { icon: '📱', title: 'Electronics', itemCount: 1250, color: 'bg-royal-blue/10', href: '/electronics' },
+  { icon: '👕', title: 'Fashion', itemCount: 3400, color: 'bg-hot-pink/10', href: '/shop/fashion' },
+  { icon: '🏠', title: 'Household', itemCount: 890, color: 'bg-tangerine/10', href: '/shop/household' },
+  { icon: '🍳', title: 'Kitchen', itemCount: 670, color: 'bg-soft-gold/10', href: '/shop/kitchen' },
+  { icon: '💄', title: 'Personal Care', itemCount: 1100, color: 'bg-lime-green/10', href: '/shop/personal-care' },
+  { icon: '🎒', title: 'Affordable Essentials', itemCount: 2300, color: 'bg-royal-blue/10', href: '/shop/affordable-essentials' },
+]
+
+const ownedProducts: Product[] = [
+  {
+    image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500&q=80',
+    title: 'Premium Wireless Headphones - Noise Cancelling',
+    price: 4500,
+    originalPrice: 6000,
+    badges: ['owned', 'fast', 'quality'],
+    rating: 4.8,
+    reviews: 234,
+  },
+  {
+    image: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500&q=80',
+    title: 'Classic Analog Watch - Leather Strap',
+    price: 2800,
+    originalPrice: 3500,
+    badges: ['owned', 'quality'],
+    rating: 4.6,
+    reviews: 156,
+  },
+  {
+    image: 'https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=500&q=80',
+    title: 'Designer Sunglasses - UV Protection',
+    price: 1200,
+    badges: ['owned', 'fast', 'trending'],
+    rating: 4.7,
+    reviews: 89,
+  },
+  {
+    image: 'https://images.unsplash.com/photo-1585386959984-a4155224a1ad?w=500&q=80',
+    title: 'Portable Bluetooth Speaker - Waterproof',
+    price: 3200,
+    originalPrice: 4200,
+    badges: ['owned', 'quality', 'trending'],
+    rating: 4.9,
+    reviews: 312,
+  },
+]
+
+const partnerProducts: Product[] = [
+  {
+    image: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=500&q=80',
+    title: 'Running Shoes - Breathable Mesh',
+    price: 3500,
+    originalPrice: 5000,
+    badges: ['partner', 'trending'],
+    rating: 4.5,
+    reviews: 178,
+  },
+  {
+    image: 'https://images.unsplash.com/photo-1560343090-f0409e92791a?w=500&q=80',
+    title: 'Cotton T-Shirt Pack (3 pieces)',
+    price: 1500,
+    badges: ['partner', 'quality'],
+    rating: 4.4,
+    reviews: 203,
+  },
+  {
+    image: 'https://images.unsplash.com/photo-1491553895911-0055eca6402d?w=500&q=80',
+    title: 'Leather Wallet - RFID Protection',
+    price: 1800,
+    originalPrice: 2500,
+    badges: ['partner'],
+    rating: 4.6,
+    reviews: 92,
+  },
+  {
+    image: 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=500&q=80',
+    title: 'Backpack - Laptop Compartment',
+    price: 2200,
+    badges: ['partner', 'trending'],
+    rating: 4.7,
+    reviews: 145,
+  },
+]
+
+const exclusiveProducts: Product[] = [
+  {
+    image: 'https://images.unsplash.com/photo-1611930022073-b7a4ba5fcccd?w=500&q=80',
+    title: 'Smart Fitness Tracker - Heart Rate Monitor',
+    price: 5500,
+    badges: ['exclusive', 'quality'],
+    rating: 4.8,
+    reviews: 67,
+  },
+  {
+    image: 'https://images.unsplash.com/photo-1598327105666-5b89351aff97?w=500&q=80',
+    title: 'Minimalist Desk Lamp - Touch Control',
+    price: 3800,
+    badges: ['exclusive', 'trending'],
+    rating: 4.9,
+    reviews: 43,
+  },
+]
+
+const belowHundred: Product[] = [
+  {
+    image: 'https://images.unsplash.com/photo-1587563871167-1ee9c731aefb?w=500&q=80',
+    title: 'Phone Ring Holder - 360° Rotation',
+    price: 80,
+    badges: ['trending'],
+    rating: 4.3,
+    reviews: 421,
+  },
+  {
+    image: 'https://images.unsplash.com/photo-1625772452859-1c03d5bf1137?w=500&q=80',
+    title: 'Cable Organizer Set (5 pieces)',
+    price: 95,
+    badges: ['trending', 'quality'],
+    rating: 4.5,
+    reviews: 289,
+  },
+  {
+    image: 'https://images.unsplash.com/photo-1610557892470-55d9e80c0bce?w=500&q=80',
+    title: 'Reusable Shopping Bag',
+    price: 50,
+    badges: ['trending'],
+    rating: 4.2,
+    reviews: 156,
+  },
+  {
+    image: 'https://images.unsplash.com/photo-1621607512214-68297480165e?w=500&q=80',
+    title: 'Notebook Set - A5 Size',
+    price: 75,
+    badges: ['trending'],
+    rating: 4.4,
+    reviews: 198,
+  },
+]
+
+// ----- Component -----
 export default function ShopContent() {
-  const categories = [
-    {
-      icon: '📱',
-      title: 'Electronics',
-      itemCount: 1250,
-      color: 'bg-royal-blue/10',
-    },
-    {
-      icon: '👕',
-      title: 'Fashion',
-      itemCount: 3400,
-      color: 'bg-hot-pink/10',
-    },
-    {
-      icon: '🏠',
-      title: 'Household',
-      itemCount: 890,
-      color: 'bg-tangerine/10',
-    },
-    {
-      icon: '🍳',
-      title: 'Kitchen',
-      itemCount: 670,
-      color: 'bg-soft-gold/10',
-    },
-    {
-      icon: '💄',
-      title: 'Personal Care',
-      itemCount: 1100,
-      color: 'bg-lime-green/10',
-    },
-    {
-      icon: '🎒',
-      title: 'Affordable Essentials',
-      itemCount: 2300,
-      color: 'bg-royal-blue/10',
-    },
-  ]
-  const ownedProducts = [
-    {
-      image:
-        'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500&q=80',
-      title: 'Premium Wireless Headphones - Noise Cancelling',
-      price: 4500,
-      originalPrice: 6000,
-      badges: ['owned' as const, 'fast' as const, 'quality' as const],
-      rating: 4.8,
-      reviews: 234,
-    },
-    {
-      image:
-        'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500&q=80',
-      title: 'Classic Analog Watch - Leather Strap',
-      price: 2800,
-      originalPrice: 3500,
-      badges: ['owned' as const, 'quality' as const],
-      rating: 4.6,
-      reviews: 156,
-    },
-    {
-      image:
-        'https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=500&q=80',
-      title: 'Designer Sunglasses - UV Protection',
-      price: 1200,
-      badges: ['owned' as const, 'fast' as const, 'trending' as const],
-      rating: 4.7,
-      reviews: 89,
-    },
-    {
-      image:
-        'https://images.unsplash.com/photo-1585386959984-a4155224a1ad?w=500&q=80',
-      title: 'Portable Bluetooth Speaker - Waterproof',
-      price: 3200,
-      originalPrice: 4200,
-      badges: ['owned' as const, 'quality' as const, 'trending' as const],
-      rating: 4.9,
-      reviews: 312,
-    },
-  ]
-  const partnerProducts = [
-    {
-      image:
-        'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=500&q=80',
-      title: 'Running Shoes - Breathable Mesh',
-      price: 3500,
-      originalPrice: 5000,
-      badges: ['partner' as const, 'trending' as const],
-      rating: 4.5,
-      reviews: 178,
-    },
-    {
-      image:
-        'https://images.unsplash.com/photo-1560343090-f0409e92791a?w=500&q=80',
-      title: 'Cotton T-Shirt Pack (3 pieces)',
-      price: 1500,
-      badges: ['partner' as const, 'quality' as const],
-      rating: 4.4,
-      reviews: 203,
-    },
-    {
-      image:
-        'https://images.unsplash.com/photo-1491553895911-0055eca6402d?w=500&q=80',
-      title: 'Leather Wallet - RFID Protection',
-      price: 1800,
-      originalPrice: 2500,
-      badges: ['partner' as const],
-      rating: 4.6,
-      reviews: 92,
-    },
-    {
-      image:
-        'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=500&q=80',
-      title: 'Backpack - Laptop Compartment',
-      price: 2200,
-      badges: ['partner' as const, 'trending' as const],
-      rating: 4.7,
-      reviews: 145,
-    },
-  ]
-  const exclusiveProducts = [
-    {
-      image:
-        'https://images.unsplash.com/photo-1611930022073-b7a4ba5fcccd?w=500&q=80',
-      title: 'Smart Fitness Tracker - Heart Rate Monitor',
-      price: 5500,
-      badges: ['exclusive' as const, 'quality' as const],
-      rating: 4.8,
-      reviews: 67,
-    },
-    {
-      image:
-        'https://images.unsplash.com/photo-1598327105666-5b89351aff97?w=500&q=80',
-      title: 'Minimalist Desk Lamp - Touch Control',
-      price: 3800,
-      badges: ['exclusive' as const, 'trending' as const],
-      rating: 4.9,
-      reviews: 43,
-    },
-  ]
-  const belowHundred = [
-    {
-      image:
-        'https://images.unsplash.com/photo-1587563871167-1ee9c731aefb?w=500&q=80',
-      title: 'Phone Ring Holder - 360° Rotation',
-      price: 80,
-      badges: ['trending' as const],
-      rating: 4.3,
-      reviews: 421,
-    },
-    {
-      image:
-        'https://images.unsplash.com/photo-1625772452859-1c03d5bf1137?w=500&q=80',
-      title: 'Cable Organizer Set (5 pieces)',
-      price: 95,
-      badges: ['trending' as const, 'quality' as const],
-      rating: 4.5,
-      reviews: 289,
-    },
-    {
-      image:
-        'https://images.unsplash.com/photo-1610557892470-55d9e80c0bce?w=500&q=80',
-      title: 'Reusable Shopping Bag',
-      price: 50,
-      badges: ['trending' as const],
-      rating: 4.2,
-      reviews: 156,
-    },
-    {
-      image:
-        'https://images.unsplash.com/photo-1621607512214-68297480165e?w=500&q=80',
-      title: 'Notebook Set - A5 Size',
-      price: 75,
-      badges: ['trending' as const],
-      rating: 4.4,
-      reviews: 198,
-    },
-  ]
   return (
     <div className="min-h-screen bg-cream-peach">
       <Hero />

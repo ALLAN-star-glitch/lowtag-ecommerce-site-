@@ -4,11 +4,12 @@ import React, { useState, useEffect } from "react";
 import Image from "next/image";
 
 const slideImages = [
-  "https://images.unsplash.com/photo-1605902711622-cfb43c4437b5?w=900&auto=format&fit=crop&q=60",
+
   "https://images.unsplash.com/photo-1570857502809-08184874388e?w=900&auto=format&fit=crop&q=60",
   "https://images.unsplash.com/photo-1483985988355-763728e1935b?w=900&auto=format&fit=crop&q=60",
   "https://images.unsplash.com/photo-1542838132-92c53300491e?w=900&auto=format&fit=crop&q=60",
   "https://images.unsplash.com/photo-1567958451986-2de427a4a0be?w=900&auto=format&fit=crop&q=60",
+  "https://images.unsplash.com/photo-1605902711622-cfb43c4437b5?w=900&auto=format&fit=crop&q=60",
 ];
 
 export default function Hero() {

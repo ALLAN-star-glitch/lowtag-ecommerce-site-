@@ -2,10 +2,11 @@
 
 import React, { useState, useMemo } from "react";
 import Link from "next/link";
-import { ProductCard } from "./ProductCard";
-import { ChevronDown, ChevronUp, X, Filter } from "lucide-react";
-import { badgesList, categories, sampleProducts } from "./SampleProducts";
+import { ChevronDown, ChevronUp, Filter } from "lucide-react";
 import { BadgeType } from "@/lib/types/badge/badgeType";
+import { Product } from "@/lib/interfaces/product/product";
+import ProductCard  from "./ProductCard";
+  
 
 /* ---------------------------------------------
    COLOR SYSTEM
@@ -20,16 +21,29 @@ const LT_MUTED_BORDER = "rgba(0,0,0,0.08)";
    FLASH DEALS LIST
 ---------------------------------------------- */
 const flashDealsList = [
-  { name: "Black Friday", color: "#F87171" }, // red
-  { name: "Weekend Sale", color: "#60A5FA" }, // blue
-  { name: "Cyber Monday", color: "#FBBF24" }, // yellow
-  { name: "Holiday Deals", color: "#34D399" }, // green
+  { name: "Black Friday", color: "#F87171" },
+  { name: "Weekend Sale", color: "#60A5FA" },
+  { name: "Cyber Monday", color: "#FBBF24" },
+  { name: "Holiday Deals", color: "#34D399" },
 ];
+
+/* ---------------------------------------------
+   COMPONENT PROPS
+---------------------------------------------- */
+interface ProductGridProps {
+  products: Product[]; // now accepts a dynamic array of products
+  badgesList?: BadgeType[];
+  categories?: string[];
+}
 
 /* ---------------------------------------------
    MAIN COMPONENT
 ---------------------------------------------- */
-export function ProductGrid() {
+export function ProductGrid({
+  products,
+  badgesList = [],
+  categories = [],
+}: ProductGridProps) {
   const [search, setSearch] = useState("");
   const [selectedBadges, setSelectedBadges] = useState<BadgeType[]>([]);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
@@ -45,12 +59,12 @@ export function ProductGrid() {
      FILTERED PRODUCTS
   ---------------------------------------------- */
   const filteredProducts = useMemo(() => {
-    return sampleProducts.filter((p) => {
+    return products.filter((p) => {
       const q = search.toLowerCase();
       const matchSearch =
         q === "" ||
         p.name.toLowerCase().includes(q) ||
-        p.category?.toLowerCase().includes(q);
+        p.category?.name.toLowerCase().includes(q);
 
       const matchBadge =
         selectedBadges.length === 0 ||
@@ -58,7 +72,7 @@ export function ProductGrid() {
 
       const matchCategory =
         selectedCategories.length === 0 ||
-        selectedCategories.includes(p.category || "");
+        selectedCategories.includes(p.category?.name || "");
 
       const matchPrice =
         (price.min === "" || (p.discountPrice ?? p.price) >= Number(price.min)) &&
@@ -66,7 +80,7 @@ export function ProductGrid() {
 
       return matchSearch && matchBadge && matchCategory && matchPrice;
     });
-  }, [search, selectedBadges, selectedCategories, price]);
+  }, [products, search, selectedBadges, selectedCategories, price]);
 
   const toggleBadge = (badge: BadgeType) => {
     setSelectedBadges((prev) =>
@@ -114,7 +128,7 @@ export function ProductGrid() {
           </div>
         </div>
 
-        {/* FLASH DEAL PILLS (HORIZONTAL, STICKY) */}
+        {/* FLASH DEAL PILLS */}
         <div className="col-span-12 mb-6">
           <div className="overflow-x-auto no-scrollbar">
             <div className="flex gap-3 sticky top-40 bg-cream-peach py-2 z-20 px-2">
@@ -157,7 +171,7 @@ export function ProductGrid() {
         <div className="col-span-12 md:col-span-9 lg:col-span-10">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-2xl font-bold" style={{ color: LT_TEXT }}>
-              Today&apos;s Products
+              Products
             </h2>
             <span className="text-sm" style={{ color: LT_TEXT }}>
               {filteredProducts.length} products found
@@ -166,7 +180,21 @@ export function ProductGrid() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredProducts.slice(0, visibleCount).map((product) => (
-              <ProductCard key={product.id} {...product} />
+              <ProductCard
+                key={product.id}
+                id={product.id.toString()}
+                name={product.name}
+                price={product.discountPrice ?? product.price}
+                originalPrice={product.price}  // optional, now included
+                image={product.images[0]?.url || ''}
+                badges={product.badges ?? []}
+                rating={
+                  product.reviews?.length
+                    ? product.reviews.reduce((sum, r) => sum + r.rating, 0) / product.reviews.length
+                    : 0
+                }
+                reviewsCount={product.reviews?.length ?? 0}
+              />
             ))}
           </div>
 
@@ -213,72 +241,70 @@ export function ProductGrid() {
   function renderFilters(isMobile: boolean) {
     return (
       <div className="space-y-6 p-2">
-        {/* Only render search for desktop */}
         {!isMobile && (
           <div
             className="p-2 rounded-xl shadow-sm"
-            style={{
-              backgroundColor: "#fff",
-              border: `1px solid ${LT_MUTED_BORDER}`,
-            }}
+            style={{ backgroundColor: "#fff", border: `1px solid ${LT_MUTED_BORDER}` }}
           >
-            <div className="flex items-center gap-2">
-              <input
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                placeholder="Search products..."
-                className="w-full bg-transparent outline-none text-sm py-1"
-                style={{ color: LT_TEXT }}
-              />
-            </div>
+            <input
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Search products..."
+              className="w-full bg-transparent outline-none text-sm py-1"
+              style={{ color: LT_TEXT }}
+            />
           </div>
         )}
 
         {/* BADGES */}
-        <FilterSection
-          title="Badges"
-          isOpen={showBadges}
-          toggle={() => setShowBadges(!showBadges)}
-          accentColor={LT_PRIMARY}
-          textColor={LT_TEXT}
-        >
-          <div className="flex flex-col gap-2">
-            {badgesList.map((badge) => (
-              <label key={badge} className="flex items-center gap-2 text-sm">
-                <input
-                  type="checkbox"
-                  checked={selectedBadges.includes(badge as BadgeType)}
-                  onChange={() => toggleBadge(badge as BadgeType)}
-                  className="w-4 h-4 accent-[var(--color-royal-blue)]"
-                />
-                <span style={{ color: LT_TEXT }}>{badge}</span>
-              </label>
-            ))}
-          </div>
-        </FilterSection>
+        {badgesList.length > 0 && (
+          <FilterSection
+            title="Badges"
+            isOpen={showBadges}
+            toggle={() => setShowBadges(!showBadges)}
+            accentColor={LT_PRIMARY}
+            textColor={LT_TEXT}
+          >
+            <div className="flex flex-col gap-2">
+              {badgesList.map((badge) => (
+                <label key={badge} className="flex items-center gap-2 text-sm">
+                  <input
+                    type="checkbox"
+                    checked={selectedBadges.includes(badge)}
+                    onChange={() => toggleBadge(badge)}
+                    className="w-4 h-4 accent-[var(--color-royal-blue)]"
+                  />
+                  <span style={{ color: LT_TEXT }}>{badge}</span>
+                </label>
+              ))}
+            </div>
+          </FilterSection>
+        )}
 
         {/* CATEGORIES */}
-        <FilterSection
-          title="Categories"
-          isOpen={showCategories}
-          toggle={() => setShowCategories(!showCategories)}
-          accentColor={LT_PRIMARY}
-          textColor={LT_TEXT}
-        >
-          <div className="flex flex-col gap-2">
-            {categories.map((cat) => (
-              <label key={cat} className="flex items-center gap-2 text-sm">
-                <input
-                  type="checkbox"
-                  checked={selectedCategories.includes(cat)}
-                  onChange={() => toggleCategory(cat)}
-                  className="w-4 h-4 accent-[var(--color-royal-blue)]"
-                />
-                <span style={{ color: LT_TEXT }}>{cat}</span>
-              </label>
-            ))}
-          </div>
-        </FilterSection>
+        {categories.length > 0 && (
+          <FilterSection
+            title="Categories"
+            isOpen={showCategories}
+            toggle={() => setShowCategories(!showCategories)}
+            accentColor={LT_PRIMARY}
+            textColor={LT_TEXT}
+          >
+            <div className="flex flex-col gap-2">
+              {categories.map((cat) => (
+                <label key={cat} className="flex items-center gap-2 text-sm">
+                  <input
+                    type="checkbox"
+                    checked={selectedCategories.includes(cat)}
+                    onChange={() => toggleCategory(cat)}
+                    className="w-4 h-4 accent-[var(--color-royal-blue)]"
+                  />
+                  <span style={{ color: LT_TEXT }}>{cat}</span>
+                </label>
+              ))}
+            </div>
+          </FilterSection>
+        )}
 
         {/* PRICE */}
         <FilterSection
@@ -295,11 +321,7 @@ export function ProductGrid() {
               value={price.min}
               onChange={(e) => setPrice({ ...price, min: e.target.value })}
               className="w-1/2 px-2 py-1 rounded-lg"
-              style={{
-                backgroundColor: "#fff",
-                border: `1px solid ${LT_MUTED_BORDER}`,
-                color: LT_TEXT,
-              }}
+              style={{ backgroundColor: "#fff", border: `1px solid ${LT_MUTED_BORDER}`, color: LT_TEXT }}
             />
             <input
               type="number"
@@ -307,11 +329,7 @@ export function ProductGrid() {
               value={price.max}
               onChange={(e) => setPrice({ ...price, max: e.target.value })}
               className="w-1/2 px-2 py-1 rounded-lg"
-              style={{
-                backgroundColor: "#fff",
-                border: `1px solid ${LT_MUTED_BORDER}`,
-                color: LT_TEXT,
-              }}
+              style={{ backgroundColor: "#fff", border: `1px solid ${LT_MUTED_BORDER}`, color: LT_TEXT }}
             />
           </div>
         </FilterSection>

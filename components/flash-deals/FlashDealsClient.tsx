@@ -2,8 +2,8 @@
 
 import React, { useState, useEffect } from 'react'
 import Confetti from 'react-confetti'
-import { Hero } from '@/components/flash-deals/Hero'
 import { ProductGrid } from '@/components/flash-deals/ProductGrid'
+import { FlashSaleHeroSection } from './Hero'
 
 export default function FlashDealsClient() {
   const [windowSize, setWindowSize] = useState({ width: 0, height: 0 })
@@ -33,7 +33,7 @@ export default function FlashDealsClient() {
   return (
     <div className="min-h-screen bg-white relative">
       {showConfetti && <Confetti width={windowSize.width} height={windowSize.height} />}
-      <Hero />
+      <FlashSaleHeroSection />
       <ProductGrid />
   
   

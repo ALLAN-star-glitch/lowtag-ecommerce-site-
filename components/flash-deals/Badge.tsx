@@ -64,7 +64,7 @@ export function Badge({ type, className = '' }: BadgeProps) {
       text: 'text-white',
     },
   }
-  const badge = badges[type]
+  const badge = badges[type] // bracket notation to access object value using a key ... there are other method like the dot notation e.g., badges.owned .. but this is used when you know the key in advanced ...
   const Icon = badge.icon
   return (
     <div
