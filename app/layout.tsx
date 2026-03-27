@@ -21,17 +21,17 @@ export const metadata: Metadata = {
   description:
     "Discover the best deals and flash sales on electronics, fashion, and more with LowTag – your trusted online marketplace in Kenya.",
   keywords: ["LowTag", "Kenya", "Deals", "Shopping", "Electronics", "Flash Sales"],
-  authors: [{ name: "Allan Mathenge", url: "https://allan-portfolio-website.vercel.app/" }],
+  authors: [{ name: "Allan Mathenge", url: "https://lowtag.co.ke" }],
   themeColor: "#00BFA6", // teal/brand color
   openGraph: {
     title: "LowTag – Affordable Shopping in Kenya",
     description:
       "Discover the best deals and flash sales on electronics, fashion, and more with LowTag – your trusted online marketplace in Kenya.",
-    url: "https://lowtag-ecommerce-site.vercel.app/",
+    url: "https://lowtag.co.ke",
     siteName: "LowTag",
     images: [
       {
-        url: "https://lowtag-ecommerce-site.vercel.app/_next/image?url=%2Flogo.png&w=256&q=75",
+        url: "https://lowtag.co.ke/_next/image?url=%2Flogo.png&w=256&q=75",
         width: 1200,
         height: 630,
         alt: "LowTag - Deals and Flash Sales",
